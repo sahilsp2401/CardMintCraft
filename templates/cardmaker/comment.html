@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% block title %}Comments{% endblock title %}
+{% block commentactive %} active{% endblock commentactive %}
+{% load extras %}
+{% load humanize %}
+
+{% block style %}
+
+}
+.comment-box {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+.comment-box h5 {
+  margin-bottom: 10px;
+  color: #007bff;
+}
+button:hover {
+    cursor: pointer; /* cursor changes to pointer */
+  }
+.comment-box p {
+  margin-bottom: 5px;
+  color: #495057;
+}
+.comment-form {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+.comment-form textarea {
+  resize: none;
+}
+.comment-form button {
+  transition: all 0.3s ease-in-out;
+}
+.comment-form button:hover {
+  transform: translateY(-2px);
+}
+
+{% endblock style %}
+{% block body %}
+
+<div class="container">
+    <h2>Leave us a Comment<span class="badge badge-dark">{{comments.count}}</span></h2>
+    <div class="my-2">
+        {% if user.is_authenticated %}
+        <form action="/postComment" method="post"> {% csrf_token %}
+            <input type="hidden" name="parentSno" value="">
+              <div class="form-group">
+                <textarea class="form-control" name="comment" id="comment" rows="3" placeholder="Enter your Comment here"></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+        {% else %}
+        <p><b>Please Login to post the comment</b></p>
+        {% endif %}
+    </div>
+
+    {% for comment in comments %}
+
+    <div class="row my-1 mx-0 p-1 comment-box">
+        <div class="col-md-1">
+            <img class="rounded mx-auto d-block p-2 border border-dark rounded-circle " style=" width: 50px;"
+                src="/static/img/user.png" alt="">
+        </div>
+        <div class="col-md-11 ">
+            <b>{{comment.user.username}}</b><span class="badge badge-secondary">({{comment.timeStamp |naturaltime}})</span>
+            <div>{{comment.comment}}</div>
+            <div class="reply mx-0 mt-2">
+                {% if user.is_authenticated %}
+                <button class="btn btn-sm btn-outline-primary my-1" type="button" data-toggle="collapse"
+                    data-target="#replyBox{{comment.sno}}" aria-expanded="false" aria-controls="collapseExample">
+                    Reply
+                </button>
+
+                <div class="collapse" id="replyBox{{comment.sno}}">
+                    <div class="card card-body my-2">
+                        <form action="/postComment" method="post"> {% csrf_token %}
+                            <div class="form-group">
+                                <label for="comment">Post a Reply</label>
+                                <input type="text" class="form-control" name="comment" id="comment"
+                                    placeholder="Enter your comment here">
+                                <input type="hidden" name="parentSno" value="{{comment.sno}}">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </form>
+                    </div>
+                </div>
+                {% else %}
+                <button class="btn btn-sm btn-outline-primary my-1" type="button" data-toggle="collapse"
+                    data-target="#replyBox{{comment.sno}}" aria-expanded="false" aria-controls="collapseExample"
+                    disabled>
+                    Login to Reply
+                </button>
+                {% endif %}
+                <div class="replies my-2">
+                    {% for reply in replyDict|get_val:comment.sno %}
+                    <div class="row my-2">
+                        <div class="col-md-1">
+                            <img class="rounded mx-auto d-block p-2 border border-dark rounded-circle  w-75 my-1"
+                                style=" width: 50px;" src="/static/img/user.png" alt="">
+                        </div>
+                        <div class="col-md-11">
+                            <b>{{reply.user.username}}</b><span class="badge badge-secondary">({{reply.timeStamp |naturaltime}})</span>
+                            <div>{{reply.comment}}</div>
+                            <br>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock body %}
+
+

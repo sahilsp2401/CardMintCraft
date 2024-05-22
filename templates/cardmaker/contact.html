@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Contact Us{% endblock title %}
+{% block contactactive %} active{% endblock contactactive %}
+{% block body %}
+
+<div class="container my-3">
+    <h1>Contact CardMintCraft Admin</h1>
+<form method="post" action="/contact"> {% csrf_token %}
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input type="name" class="form-control" name='name' id="name" aria-describedby="name">
+    </div>
+    <div class="form-group">
+      <label for="email">Email address</label>
+      <input type="email" class="form-control" id="email" name='email' aria-describedby="emailHelp">
+      <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+    </div>
+    <div class="form-group">
+      <label for="phone">Phone Number</label>
+      <input type="phone" pattern="[789][0-9]{9}" class="form-control" id="phone" name='phone'>
+    </div>
+    <div class="form-group">
+      <label for="content">Describe your issue:</label>
+      <textarea class="form-control" name="content" id="content" cols='30' rows='7'></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</div>
+
+{% endblock body %}
