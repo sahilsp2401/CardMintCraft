@@ -16,7 +16,7 @@ CardMintCraft is an online platform built using Django, a high-level Python web 
 
 2. Navigate to the project directory
 
-3. Install Django (if not already installed
+3. Install Django (if not already installed)
 
 4. Install the required dependencies
 
